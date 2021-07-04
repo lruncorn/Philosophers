@@ -5,23 +5,6 @@ void	live_loop(void *ph)
 	t_ph	*phil;
 
 	phil = (t_ph *)ph;
-	// if (phil->number == phil->all->philo_num - 1)
-	// {
-	// 	pthread_mutex_lock(&phil->all->forks[phil->left_fork]);
-	// message("has taken a fork", ph);
-	// pthread_mutex_lock(&phil->all->forks[phil->right_fork]);
-	// message("has taken a fork", ph);
-	// message("is eating", ph);
-	// usleep(phil->all->eat_time * 1000);
-	// pthread_mutex_unlock(&phil->all->forks[phil->left_fork]);
-	// pthread_mutex_unlock(&phil->all->forks[phil->right_fork]);
-	// phil->have_eaten += 1;
-	// phil->time_to_death = get_time() + phil->all->die_time;
-	// message("is sleeping", ph);
-	// usleep(phil->all->sleep_time * 1000);
-	// message("is thinking", ph);
-	// }
-	// else{
 	pthread_mutex_lock(&phil->all->forks[phil->left_fork]);
 	message("has taken a fork", ph);
 	pthread_mutex_lock(&phil->all->forks[phil->right_fork]);
@@ -48,8 +31,6 @@ void	*live(void *ph)
 	if (pthread_create(&tid, NULL, &checker, ph) != 0)
 		return ((void *)1);
 	pthread_detach(tid);
-	// if (p->number % 2 == 0)
-	// 	usleep(100);
 	while (1)
 	{
 		live_loop(p);
@@ -68,7 +49,7 @@ int	start_philosophizing(t_philo *philo)
 	{
 		if (pthread_create(&tid1, NULL, &check_m, philo) != 0)
 			return (1);
-		// pthread_detach(tid1);
+		pthread_detach(tid1);
 	}
 	while (i < philo->philo_num)
 	{
@@ -77,7 +58,6 @@ int	start_philosophizing(t_philo *philo)
 			NULL, &live, (void *)(&philo->ph[i])) != 0)
 			return (-1);
 		pthread_detach(philo->ph[i].thread);
-		// usleep(100);
 		i++;
 	}
 	return (0);
